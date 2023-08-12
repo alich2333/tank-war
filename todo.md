@@ -4,6 +4,8 @@
 
 [简介](https://zhuanlan.zhihu.com/p/54181691)
 
+[Wiki](https://strategywiki.org/wiki/Battle_City/How_to_play)
+
 ## 资源
 
 [贴图资源](https://www.spriters-resource.com/nes/batcity/)
