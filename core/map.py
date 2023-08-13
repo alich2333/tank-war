@@ -1,6 +1,8 @@
 import numpy as np
 import pygame as pyg
 
+window = pyg.display.set_mode((500, 200))
+
 class Map:
     '''
     Game Map
@@ -27,7 +29,33 @@ class Map:
     # todo: 
     # 1. map generation
     #   a. connectivity
-    # 2. brick damage
-    def get_bricks(self):
+    # 2. brick damage 怎么判断是哪种墙体嘞
+class Wall():
+    def __init__(wall_self,
+                left,
+                top,
+                wall_hp:float = 3,
+                wall_lives:int = 1) -> None:
+        wall_self.image = pyg.image.load('img/steels.gif')
+        wall_self.rect = wall_self.image.get_rect()
+        wall_self.rect.left = left            
+        wall_self.rect.top = top
+        wall_self.hp = wall_hp
+        wall_self.lives = wall_lives
+
+    def get_hit(wall_self,damage:float):
+        if wall_self.hp == 0 or damage <= 0:
+            return
+        wall_self.hp -= damage
+        if wall_self.hp < 0:
+            wall_self.hp = 0
+            wall_self.lives -= 1
+            if wall_self.lives == 0:
+                wall_self.die = True
+
+    def displayWall(wall_self):
+        if wall_self.die == False:
+            window.blit(wall_self.image,wall_self.rect)
         
+
     # 3. map rendering$
