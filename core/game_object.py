@@ -15,7 +15,7 @@ class GameObject:
                  passive_damage: float = 0,
                  pos: tuple[float, float] = (0, 0),
                  speed: tuple[float, float] = (0, 0),
-                 angle: float = 0,
+                 angle: float = 0,# in rad
                  rotate_speed: float = 0) -> None:
         # life states
         self.max_hp = max_hp

@@ -3,6 +3,9 @@ import numpy as np
 
 
 class TextureLoader:
+    '''
+    Texture Loader
+    '''
     def __init__(self) -> None:
         self.texture = pyg.image.load(
             "asserts/NES - Battle City JPN - General Sprites.png")
@@ -24,3 +27,8 @@ class TextureLoader:
         
 
         return pyg.Rect(player_offset[0], player_offset[1], 15, 15)
+
+    def get_block(self,
+                  block_type: int = 0,
+                  damage_type: int = 0):
+        pass
