@@ -1,61 +1,69 @@
 import numpy as np
 import pygame as pyg
-
-window = pyg.display.set_mode((500, 200))
+from core.game_object import*
+from core.constants import *
 
 class Map:
     '''
     Game Map
     '''
+
     def __init__(self,
-                 width=13,
-                 height=13,
-                 block_length_in_pixel=15) -> None:
+                 width=MAP_WIDTH,
+                 height=MAP_HEIGHT) -> None:
         self.width = width
         self.height = height
-        self.block_length = block_length_in_pixel
         self.map = np.zeros((height, width), dtype=np.int32)
 
     def get_surfaces(self):
         pass
 
     def get_map_sizes_in_pixel(self) -> tuple[int, int]:
-        return (self.width*self.block_length, self.height*self.block_length)
-    
-    def render_solid_layer(self, surface:pyg.Surface):
+        return (self.width * BLOCK_LENGTH, self.height * BLOCK_LENGTH)
+
+    def render_solid_layer(self, surface: pyg.Surface):
         for y in range(self.height):
             for x in range(self.width):
                 pyg.draw.rect(surface, pyg.Color())
-    # todo: 
+    # todo:
     # 1. map generation
     #   a. connectivity
     # 2. brick damage 怎么判断是哪种墙体嘞
-class Wall():
-    def __init__(wall_self,
-                left,
-                top,
-                wall_hp:float = 3,
-                wall_lives:int = 1) -> None:
-        wall_self.image = pyg.image.load('img/steels.gif')
-        wall_self.rect = wall_self.image.get_rect()
-        wall_self.rect.left = left            
-        wall_self.rect.top = top
-        wall_self.hp = wall_hp
-        wall_self.lives = wall_lives
+class Wall(GameObject):
+    def __init__(self,
+                 pos: tuple[float, float],
+                 lives:int=16,
+                 hp:float = 50) -> None:
+        super().__init__(is_dynamic=False,
+                         lives=lives,
+                         max_hp=hp,
+                         pos=pos)
+        self.state = (1 << 16) - 1
+        self.hps = [hp for i in range(16)]
 
-    def get_hit(wall_self,damage:float):
-        if wall_self.hp == 0 or damage <= 0:
+    def intersect(self, bullet):
+        '''
+        get hit point of a bullet
+        '''
+        pass
+
+    def get_hit(self,
+                damage:float,
+                hit_pos: tuple[float, float] # normalized coordinate
+                ):
+        if self.hp == 0 or damage <= 0:
             return
-        wall_self.hp -= damage
-        if wall_self.hp < 0:
-            wall_self.hp = 0
-            wall_self.lives -= 1
-            if wall_self.lives == 0:
-                wall_self.die = True
+        self.hp -= damage
+        if self.hp < 0:
+            self.hp = 0
+            self.lives -= 1
+            if self.lives == 0:
+                self.die = True
 
-    def displayWall(wall_self):
-        if wall_self.die == False:
-            window.blit(wall_self.image,wall_self.rect)
+    def displayWall(self):
+        pass
+        # if wall_self.die == False:
+        #     window.blit(wall_self.image,wall_self.rect)
         
 
     # 3. map rendering$
