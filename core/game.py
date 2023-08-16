@@ -3,6 +3,7 @@ import pygame as pyg
 from core.constants import *
 from core.tank import *
 from core.map import *
+from core.user_input import *
 
 
 class Game:
@@ -29,6 +30,8 @@ class Game:
         # save tanks in a list
         self.player_tanks = [self.create_new_player_tank(
             self.player_tank_inital_pos(player)) for player in range(player_num)]
+        self.player_inputs = [UserInput(player)
+                              for player in range(player_num)]
         self.ai_tanks = []
 
     def __del__(self):
@@ -56,7 +59,6 @@ class Game:
     def respawn_tank(self, tank_player: int = 0):
         if len(self.player_tanks):
             self.player_tanks[tank_player] = Tank()
-        pass
 
     def poll_events(self):
         events = pyg.event.get()
@@ -68,8 +70,39 @@ class Game:
                     self.should_quit = True
         return events
 
-    def update_with_events(self, events):
-        pass
+    def resolve_events(self, events: list[pyg.event]):
+        dir_key_events = [[] for player in range(self.player_num)]
+        for event in events:
+            # get player keys
+            for player in range(self.player_num):
+                if (event.type == pyg.KEYDOWN) or (event.type == pyg.KEYUP):
+                    if event.key in PLAYER_DIRS[player]:
+                        dir_key_events[player].append(event)
+                    if event.key == PLAYER_FIRE[player]:
+                        if event.type == pyg.KEYDOWN:
+                            self.player_inputs[player].fire_key_state = True
+                        elif event.type == pyg.KEYUP:
+                            self.player_inputs[player].fire_key_state = False
+        for player in range(self.player_num):
+            self.player_inputs[player].handle_dir_key_events(
+                dir_key_events[player])
+
+    def set_user_tank_states(self):
+        for player in range(self.player_num):
+            player_input = self.player_inputs[player]
+            player_tank = self.player_tanks[player]
+            dir = player_input.dir
+            player_tank.set_dir(dir)
+            # print(player_input.dir_key_states)
+            if player_input.dir_key_states[dir]:
+                player_tank.set_speed(SPEED_CONSTANTS[dir])
+            else:
+                player_tank.set_speed((0, 0))
+
+    def move_tanks(self):
+        for player in range(self.player_num):
+            player_tank = self.player_tanks[player]
+            player_tank.move()
 
     def frame_begin(self):
         self.window.fill("black")

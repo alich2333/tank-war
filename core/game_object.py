@@ -1,6 +1,6 @@
 import pygame as pyg
 import math
-
+import numpy as np
 
 class GameObject:
     '''
@@ -47,7 +47,7 @@ class GameObject:
         return self.hp > 0
 
     def move(self):
-        self.pos += self.speed
+        self.pos = (self.pos[0] + self.speed[0], self.pos[1] + self.speed[1])
         self.angle += self.rotate_speed
         pi_2 = 2*math.pi
         self.angle -= pi_2 * math.floor(self.angle / pi_2)

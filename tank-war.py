@@ -88,7 +88,7 @@ def test_player_tank_rendering():
 def test_block_rendering():
     game.window.blit(texture_loader.get_block(0), (100, 400))
     game.window.blit(texture_loader.get_block(1), (200, 400))
-    game.window.blit(texture_loader.get_block(2), (200, 400))
+    game.window.blit(texture_loader.get_block(2), (300, 400))
     game.window.blit(texture_loader.get_block(3), (400, 400))
 
 while game.is_running:
@@ -97,15 +97,18 @@ while game.is_running:
     events = game.poll_events()
 
     # B. deal with events to set speed and rotate speed
-    # 1. update user tank states: dir, turret rotation, fire, skills
-    # 2. game menu
-    # 3. map editor operations
-    # game.update_with_events(events)
+    # 1. resolve user inputs
+    game.resolve_events(events)
+    # 2. update user tank states: dir, turret rotation, fire, skills
+    game.set_user_tank_states()
+    # 3. game menu
+    # 4. map editor operations
 
     # C. move existing bullets and tanks
     # D. create new bullets and use user tank skills
     # E. get collision events (bullets with everything else)
     # F. update tanks' states, map, and bullets
+    game.move_tanks()
 
     # II. Rendering Frame
     game.frame_begin()
