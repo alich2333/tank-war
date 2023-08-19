@@ -12,8 +12,12 @@ class Renderer:
         self.map = map
         self.game = game
 
-    def render_bricks(self):
-        pass
+    def render_blocks(self):
+        for y in range(self.map.height):
+            for x in range(self.map.width):
+                block = self.map.map[y, x]
+                if block > EMPYT_BLOCK:
+                    self.game.window.blit(self.texture_loader.get_block(block), (x*BLOCK_LENGTH, y*BLOCK_LENGTH))
 
     def render_player_tanks(self):
         for player in range(self.game.player_num):
@@ -34,6 +38,6 @@ class Renderer:
         pass
 
     def render(self):
-        self.render_bricks()
-        self.render_player_tanks()
+        self.render_blocks()
         self.render_ai_tanks()
+        self.render_player_tanks()

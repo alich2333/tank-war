@@ -28,8 +28,7 @@ class Game:
         self.should_quit = False
 
         # save tanks in a list
-        self.player_tanks = [self.create_new_player_tank(
-            self.player_tank_inital_pos(player)) for player in range(player_num)]
+        self.player_tanks = [self.create_new_player_tank((PLAYER_SPAWN_POINTS[player][0] * BLOCK_LENGTH, PLAYER_SPAWN_POINTS[player][1] * BLOCK_LENGTH)) for player in range(player_num)]
         self.player_inputs = [UserInput(player)
                               for player in range(player_num)]
         self.ai_tanks = []
@@ -43,18 +42,6 @@ class Game:
                     pos=pos,
                     dir=1)
 
-    def player_tank_inital_pos(self, player):
-        map_width = self.map.width
-        map_height = self.map.height
-        pos = np.array(
-            [BLOCK_LENGTH, BLOCK_LENGTH], dtype=np.float32)
-        if player == 0:
-            pos[0] *= 0
-            pos[1] *= map_height - 3
-        else:
-            pos[0] *= 2
-            pos[1] *= map_height - 1
-        return (pos[0], pos[1])
 
     def respawn_tank(self, tank_player: int = 0):
         if len(self.player_tanks):

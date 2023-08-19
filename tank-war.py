@@ -86,10 +86,12 @@ def test_player_tank_rendering():
 
 
 def test_block_rendering():
-    game.window.blit(texture_loader.get_block(0), (100, 400))
-    game.window.blit(texture_loader.get_block(1), (200, 400))
-    game.window.blit(texture_loader.get_block(2), (300, 400))
-    game.window.blit(texture_loader.get_block(3), (400, 400))
+    game.window.blit(texture_loader.get_block(BRICK_BLOCK), (100, 400))
+    game.window.blit(texture_loader.get_block(STEEL_BRICK_BLOCK), (200, 400))
+    game.window.blit(texture_loader.get_block(BUSH_BLOCK), (300, 400))
+    game.window.blit(texture_loader.get_block(WATER_BLOCK), (400, 400))
+    game.window.blit(texture_loader.get_block(BASE_BLOCK), (500, 400))
+    game.window.blit(texture_loader.get_block(DESTORYED_BASE_BLOCK), (600, 400))
 
 while game.is_running:
     # I. Logical Frame
@@ -114,6 +116,6 @@ while game.is_running:
     game.frame_begin()
     test_ai_tank_rendering()
     test_player_tank_rendering()
-    test_block_rendering()
+    # test_block_rendering()
     renderer.render()
     game.frame_end()

@@ -27,23 +27,26 @@ class TextureLoader:
         self.tank_turret_sizes = [np.zeros(2, dtype=np.float32),
                                   np.zeros(2, dtype=np.float32)]
         # load block textures
-        # block = 0: brick
-        # block = 1: steel brick
-        # block = 2: bush
-        # block = 3: water
         self.block_textures = []
-        for block_type in range(4):
+        for block_type in range(BRICK_BLOCK, DESTORYED_BASE_BLOCK + 1):
             block_offset = np.zeros(2, dtype = np.int32)
             block_offset[0] = 256
-            if block_type == 0:
+            if block_type == BRICK_BLOCK:
                 pass
-            elif block_type == 1:
+            elif block_type == STEEL_BRICK_BLOCK:
                 block_offset[1] += 16
-            elif block_type == 2:
+            elif block_type == BUSH_BLOCK:
                 block_offset[0] += 16
                 block_offset[1] += 32
-            else:
+            elif block_type == WATER_BLOCK:
                 block_offset[1] += 48
+            elif block_type == BASE_BLOCK:
+                block_offset[0] += 48
+                block_offset[1] += 32
+            elif block_type == DESTORYED_BASE_BLOCK:
+                block_offset[0] += 64
+                block_offset[1] += 32
+            else:continue
             tmp = self.main_texture.subsurface((block_offset[0], block_offset[1]), (16, 16))
             self.block_textures.append(pyg.transform.scale(tmp, (BLOCK_LENGTH, BLOCK_LENGTH)))
 
@@ -134,5 +137,5 @@ class TextureLoader:
     def get_block(self,
                   block_type: int = 0,
                   damage_type: int = 0) -> pyg.Surface:
-        block_type = block_type % 4
-        return self.block_textures[block_type]
+        # assert that block_type is valid rendering block
+        return self.block_textures[block_type - 1]
