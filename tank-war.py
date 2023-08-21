@@ -93,6 +93,11 @@ def test_block_rendering():
     game.window.blit(texture_loader.get_block(BASE_BLOCK), (500, 400))
     game.window.blit(texture_loader.get_block(DESTORYED_BASE_BLOCK), (600, 400))
 
+
+print(game.player_tanks[0].get_rect())
+print(game.map.wall_list[0].get_rect())
+
+
 while game.is_running:
     # I. Logical Frame
     # A. update with user inputs
@@ -102,15 +107,16 @@ while game.is_running:
     # 1. resolve user inputs
     game.resolve_events(events)
     # 2. update user tank states: dir, turret rotation, fire, skills
-    game.set_user_tank_states()
+    game.set_player_tank_states()
     # 3. game menu
     # 4. map editor operations
 
-    # C. move existing bullets and tanks
+    # C. move existing bullets and tanks and get their potential positions
     # D. create new bullets and use user tank skills
-    # E. get collision events (bullets with everything else)
+    # E. get collision events (bullets with everything else): judge whether the tanks/bullets is colliding with the walls
     # F. update tanks' states, map, and bullets
-    game.move_tanks()
+    game.get_collision_events_and_move()
+    # game.move_tanks()
 
     # II. Rendering Frame
     game.frame_begin()

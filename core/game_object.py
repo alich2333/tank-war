@@ -52,6 +52,9 @@ class GameObject:
         pi_2 = 2*math.pi
         self.angle -= pi_2 * math.floor(self.angle / pi_2)
 
+    def get_rect(self) -> pyg.Rect:
+        # default method
+        return pyg.Rect(self.pos[0], self.pos[1], 0, 0)
 
 def hit(proa_obj: GameObject, pass_obj: GameObject):
     if not (proa_obj.is_alive() and pass_obj.is_alive()):

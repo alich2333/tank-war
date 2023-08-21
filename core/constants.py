@@ -10,6 +10,16 @@ TURRET_SCALE = 0.95
 TANK_SPEED = 3.0
 BRICK_NUM = 20
 
+# brick lives and hps
+BRICK_LIVES = 16
+BRICK_HP = 50
+STEEL_BRICK_LIVES = 16
+STEEL_BRICK_HP = 200
+
+# base
+BASE_LIVES = 1
+BASE_HP = 500
+
 # block types
 SPAWN_POINT_BLOCK = -1 # spawn point (no rendering)
 EMPYT_BLOCK = 0 #  empty (no rendering)

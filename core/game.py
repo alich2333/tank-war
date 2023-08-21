@@ -24,6 +24,7 @@ class Game:
         self.window = pyg.display.set_mode(window_size)
         self.clock = pyg.time.Clock()
         self.player_num = player_num
+        self.ai_num = 0
         self.is_running = True
         self.should_quit = False
 
@@ -41,7 +42,6 @@ class Game:
                     init_max_hp=PLAYER_MAX_HP,
                     pos=pos,
                     dir=1)
-
 
     def respawn_tank(self, tank_player: int = 0):
         if len(self.player_tanks):
@@ -74,7 +74,7 @@ class Game:
             self.player_inputs[player].handle_dir_key_events(
                 dir_key_events[player])
 
-    def set_user_tank_states(self):
+    def set_player_tank_states(self):
         for player in range(self.player_num):
             player_input = self.player_inputs[player]
             player_tank = self.player_tanks[player]
@@ -85,6 +85,53 @@ class Game:
                 player_tank.set_speed(SPEED_CONSTANTS[dir])
             else:
                 player_tank.set_speed((0, 0))
+
+    def get_collision_events_and_move(self):
+        # algorithm: optimize O(m * n)
+        # get static obects
+        # blocks and map edges
+        static_object_rects = [wall.get_rect() for wall in self.map.wall_list]
+        for i in range(4):
+            static_object_rects.append(self.map.get_boundary_rect(i))
+        map_edges_offset = len(self.map.wall_list)
+        static_offset = len(static_object_rects)
+
+        # get dynmaic obects
+        # tanks and bullets
+        dynamic_object_rects = [tank.get_future_rect() for tank in self.player_tanks] + [tank.get_future_rect() for tank in self.ai_tanks]
+        tank_offset = len(dynamic_object_rects)
+        # todo: add bullets
+        dynamic_object_num = len(dynamic_object_rects)
+
+        object_rects = static_object_rects + dynamic_object_rects
+        collision_pairs = [] # tuples: (dynamic_obj_id, static or dynamic)
+        for i in range(dynamic_object_num):
+            dynamic_rect = dynamic_object_rects[i]
+            # get all obects except for the one to collide with
+            target_object_rects = static_object_rects + dynamic_object_rects[i + 1:]
+            collisions = dynamic_rect.collidelistall(target_object_rects)
+            for j in collisions:
+                collision_idx = j
+                if j >= static_offset:
+                    collision_idx = j + i + 1
+                collision_pairs.append((i, collision_idx))
+
+        if len(collision_pairs):
+            print([(object_rects[collision[0]], object_rects[collision[1]]) for collision in collision_pairs])
+
+        # handle collision events:
+        for collision in collision_pairs:
+            dynamic_object_id = collision[0]
+            hit_object_id = collision[1]
+            # move tanks: judge whether the tank is colliding with static objects
+            if dynamic_object_id < tank_offset and hit_object_id < static_offset:
+                if dynamic_object_id < self.player_num:
+                    self.player_tanks[dynamic_object_id].set_speed((0, 0))
+                elif dynamic_object_id < self.player_num + self.ai_num:
+                    self.ai_tanks[dynamic_object_id - self.player_num].set_speed((0, 0))
+            # move bullets:
+            # todo
+        self.move_tanks()
 
     def move_tanks(self):
         for player in range(self.player_num):

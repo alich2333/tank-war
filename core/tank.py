@@ -1,5 +1,5 @@
 from core.game_object import *
-
+from core.constants import *
 
 class Tank(GameObject):
     '''
@@ -24,6 +24,12 @@ class Tank(GameObject):
                                  max_hp=init_max_hp,
                                  pos=pos,
                                  angle=0.5*math.pi*dir)
+
+    def get_rect(self):
+        return pyg.Rect(self.pos[0], self.pos[1], BLOCK_LENGTH, BLOCK_LENGTH)
+
+    def get_future_rect(self):
+        return pyg.Rect(self.pos[0] + self.speed[0], self.pos[1] + self.speed[1], BLOCK_LENGTH, BLOCK_LENGTH)
 
     def get_dir(self):
         return int(round(self.angle / (0.5*math.pi)))
